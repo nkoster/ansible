@@ -4,4 +4,6 @@
   user: root
   tasks:
     - user: name="{{username}}" state=absent remove=yes
-    #- debug: msg="Delete {{username}} from {{inventory_hostname}}."
+      register: result
+    - debug: msg="Delete {{username}} from {{inventory_hostname}}."
+      when: result.changed
