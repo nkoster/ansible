@@ -3,7 +3,7 @@
   hosts: devhomes
   user: root
   tasks:
-    - user: name="{{username}}" password="{{hash}}" group=users comment="{{fullname}}" home="/encrypted/homes/{{username}}"
+    - user: name="{{username}}" password="{{hash}}" group=users home="/encrypted/homes/{{username}}"
     - file: src=/encrypted/homes/{{username}} dest=/home/{{username}} state=link
 
 - name: Add user {{username}} to pvdevweb01
@@ -11,5 +11,5 @@
   hosts: pvdevweb01
   user: root
   tasks:
-    - user: name="{{username}}" password="{{hash}}" group=users comment="{{fullname}}" home="/home/{{username}}"
+    - user: name="{{username}}" password="{{hash}}" group=users home="/home/{{username}}"
     - file: src=/devhomes/{{username}} dest=/home/{{username}} state=link
