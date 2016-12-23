@@ -1,0 +1,9 @@
+- name: Create remote setup fact file
+  hosts: homes
+  vars:
+    - setup_fact: /etc/ansible/facts.d/setup_complete.fact
+  tasks:
+    - command: bash -c "mkdir -p /etc/ansible/facts.d/ ; touch {{setup_fact}}"
+    - file: path="{{setup_fact}}" owner=root group=root mode=0644
+    - lineinfile: dest="{{setup_fact}}" line='{"setup_complete":"true"}'
+    - debug: msg="Setup fact file {{setup_fact}} for {{inventory_hostname}}"

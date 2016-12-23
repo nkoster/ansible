@@ -1,0 +1,8 @@
+- name: Find UID
+  gather_facts: False 
+  hosts: homes
+  user: root
+  tasks:
+    - command: bash -c "u=$(cat /etc/passwd | grep -v 65534 | awk -F ':' '{printf(\"%04d\n\", $3)} '| sort | tail -1); ((u++)); echo $u"
+      register: user_id
+    - debug: msg="Next free UID is {{user_id.stdout}} in {{inventory_hostname}}"

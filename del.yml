@@ -1,0 +1,7 @@
+- name: Delete user {{username}}
+  gather_facts: False 
+  hosts: homes
+  user: root
+  tasks:
+    - user: name="{{username}}" state=absent remove=yes
+    #- debug: msg="Delete {{username}} from {{inventory_hostname}}."
