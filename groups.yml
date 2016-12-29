@@ -1,0 +1,12 @@
+- name: Find Groups
+  gather_facts: False 
+  hosts: homes
+  user: root
+  tasks:
+    - shell: groups | tr " " "\012"
+      register: g
+    - debug: msg="{{item}}"
+      with_items: "{{g.stdout_lines}}"
+    - shell: groups
+      register: g
+    - debug: msg="{{g.stdout}}"
