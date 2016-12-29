@@ -11,5 +11,5 @@
   hosts: pvdevweb01
   user: root
   tasks:
-    - user: name="{{username}}" password="{{hash}}" group=users home="/home/{{username}}"
+    - user: name="{{username}}" password="{{hash}}" group=users home="/devhomes/{{username}}"
     - file: src=/devhomes/{{username}} dest=/home/{{username}} state=link
