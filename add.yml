@@ -1,9 +1,28 @@
+- name: Create Password Hash
+  hosts: homes
+  gather_facts: False
+  vars_prompt:
+  - name: password
+    prompt: Text to be hashed for /etc/passwd (will not echo)
+    private: yes
+  tasks:
+  - name: Create Salt
+    local_action: shell openssl rand -hex 4
+    register: rand
+    run_once: True
+  - debug: msg="Salt = {{rand.stdout}}"
+  - local_action: shell python -c 'import crypt; print crypt.crypt("{{password}}", "$6${{rand.stdout}}$")'
+    register: hash
+  - set_fact:
+      hashed: "{{hash.stdout}}"
+  - debug: msg="Password '******' with salt '{{rand.stdout}}' hashed as '{{hashed}}'"
+
 - name: Add user {{username}} to devhomes
   gather_facts: False 
   hosts: devhomes
   user: root
   tasks:
-    - user: name="{{username}}" password="{{hash}}" group=users home="/encrypted/homes/{{username}}"
+    - user: name="{{username}}" password="{{hashed}}" group=users home="/encrypted/homes/{{username}}"
     - file: src=/encrypted/homes/{{username}} dest=/home/{{username}} state=link
 
 - name: Add user {{username}} to pvdevweb01
@@ -11,5 +30,5 @@
   hosts: pvdevweb01
   user: root
   tasks:
-    - user: name="{{username}}" password="{{hash}}" group=users home="/devhomes/{{username}}"
+    - user: name="{{username}}" password="{{hashed}}" group=users home="/devhomes/{{username}}"
     - file: src=/devhomes/{{username}} dest=/home/{{username}} state=link
